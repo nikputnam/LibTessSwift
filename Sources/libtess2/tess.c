@@ -864,7 +864,6 @@ void tessAddContour( TESStesselator *tess, int size, const void* vertices,
         int j = 2;
 		for(; j<MAX_DIMENSIONS && j<size;j++) {
 				e->Org->coords[j] = coords[j];
-				printf("save extra coord %d %f\m",j,coords[j]);
 		}
 		for(; j<MAX_DIMENSIONS;j++) {
 				e->Org->coords[j] = 0;
