@@ -236,9 +236,10 @@ open class TessC {
     /// .vertex2 on inputs that have 3 coordinates will zero 'z' values of all
     /// coordinates.
     @discardableResult
-    open func tessellateRaw(windingRule: WindingRule, elementType: ElementType, polySize: Int, vertexSize: VertexSize = .vertex3) throws -> (vertices: [TESSreal], indices: [Int]) {
+    open func tessellateRaw(windingRule: WindingRule, elementType: ElementType, polySize: Int, vertexSize: Int = 3) throws -> (vertices: [TESSreal], indices: [Int]) {
         
-        if(_tess.pointee.tesselate(windingRule: Int32(windingRule.rawValue), elementType: Int32(elementType.rawValue), polySize: Int32(polySize), vertexSize: Int32(vertexSize.rawValue), normal: nil) == 0) {
+        if(_tess.pointee.tesselate(windingRule: Int32(windingRule.rawValue), elementType: Int32(elementType.rawValue), polySize: Int32(polySize), 
+            vertexSize: Int32(vertexSize), normal: nil) == 0) {
             throw TessError.tesselationFailed
         }
         
@@ -249,7 +250,7 @@ open class TessC {
         let nverts = Int(_tess.pointee.vertexCount)
         let nelems = Int(_tess.pointee.elementCount)
         
-        let stride: Int = vertexSize.rawValue
+        let stride: Int = vertexSize
         
         var output: [TESSreal] = Array(repeating: 0, count: nverts * stride)
         output.withUnsafeMutableBufferPointer { body -> Void in
@@ -290,7 +291,7 @@ open class TessC {
     @discardableResult
     open func tessellate(windingRule: WindingRule, elementType: ElementType, polySize: Int, vertexSize: VertexSize = .vertex3) throws -> (vertices: [CVector3], indices: [Int]) {
         
-        let (verts, i) = try tessellateRaw(windingRule: windingRule, elementType: elementType, polySize: polySize, vertexSize: vertexSize)
+        let (verts, i) = try tessellateRaw(windingRule: windingRule, elementType: elementType, polySize: polySize, vertexSize: vertexSize.rawValue)
         
         var output: [CVector3] = []
         output.reserveCapacity(vertexCount)
