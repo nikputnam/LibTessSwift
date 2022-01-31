@@ -188,6 +188,18 @@ open class TessC {
                                  count: CInt(vertices.count / vertexSize.rawValue))
     }
     
+    open func addContourRaw(_ vertices: [TESSreal], vertexSize: Int) {
+        if(vertices.count % vertexSize != 0) {
+            print("Warning: Vertices array provided has wrong count! Expected multiple of \(vertexSize), received \(vertices.count).")
+        }
+        
+        _tess.pointee.addContour(size: Int32(vertexSize),
+                                 pointer: vertices,
+                                 stride: CInt(MemoryLayout<TESSreal>.size * vertexSize),
+                                 count: CInt(vertices.count / vertexSize))
+    }
+    
+
     /// Adds a new contour using a specified set of 3D points.
     ///
     /// - Parameters:

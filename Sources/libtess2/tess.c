@@ -672,10 +672,9 @@ void OutputPolymesh( TESStesselator *tess, TESSmesh *mesh, int elementType, int 
 		{
 			// Store coordinate
 			vert = &tess->vertices[v->n*vertexSize];
-			vert[0] = v->coords[0];
-			vert[1] = v->coords[1];
-			if ( vertexSize > 2 )
-				vert[2] = v->coords[2];
+			for (int ii=0; ii<vertexSize; ii++) {
+				vert[ii] = v->coords[ii];
+			}
 			// Store vertex index.
 			tess->vertexIndices[v->n] = v->idx;
 		}
@@ -795,10 +794,9 @@ void OutputContours( TESStesselator *tess, TESSmesh *mesh, int vertexSize )
 		start = edge = f->anEdge;
 		do
 		{
-			*verts++ = edge->Org->coords[0];
-			*verts++ = edge->Org->coords[1];
-			if ( vertexSize > 2 )
-				*verts++ = edge->Org->coords[2];
+			for (int i=0;i<MAX_DIMENSIONS && i<vertexSize ;i++) {
+				*verts++ = edge->Org->coords[i];
+			}
 			*vertInds++ = edge->Org->idx;
 			++vertCount;
 			edge = edge->Lnext;
@@ -863,10 +861,13 @@ void tessAddContour( TESStesselator *tess, int size, const void* vertices,
         
         e->Org->coords[0] = coords[0];
         e->Org->coords[1] = coords[1];
-        if ( size > 2 )
-            e->Org->coords[2] = coords[2];
-        else
-            e->Org->coords[2] = 0;
+        int j = 2;
+		for(; j<MAX_DIMENSIONS && j<size;j++) {
+				e->Org->coords[j] = coords[j];
+		}
+		for(; j<MAX_DIMENSIONS;j++) {
+				e->Org->coords[j] = 0;
+		}
         
 		/* Store the insertion number so that the vertex can be later recognized. */
 		e->Org->idx = tess->vertexIndexCounter++;
@@ -913,8 +914,8 @@ int tessTesselate( TESStesselator *tess, int windingRule, int elementType,
 
 	if (vertexSize < 2)
 		vertexSize = 2;
-	if (vertexSize > 3)
-		vertexSize = 3;
+	if (vertexSize > MAX_DIMENSIONS)
+		vertexSize = MAX_DIMENSIONS;
 
 	if (setjmp(tess->env) != 0) { 
 		/* come back here if out of memory */

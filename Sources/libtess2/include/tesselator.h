@@ -38,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 #ifndef TESSELATOR_H
 #define TESSELATOR_H
 
+// to support interpolation of some extra vectors.  NHP 1/31/22
+#define MAX_DIMENSIONS 9
+
 #ifdef __cplusplus
 extern "C" {
 #endif
