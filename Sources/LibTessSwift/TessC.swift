@@ -192,7 +192,7 @@ open class TessC {
         if(vertices.count % vertexSize != 0) {
             print("Warning: Vertices array provided has wrong count! Expected multiple of \(vertexSize), received \(vertices.count).")
         }
-        print("add contour with \(vertices.count / vertexSize) points, \(vertices.count) total floats, \(vertexSize) per vertex")
+        //print("add contour with \(vertices.count / vertexSize) points, \(vertices.count) total floats, \(vertexSize) per vertex")
         _tess.pointee.addContour(size: Int32(vertexSize),
                                  pointer: vertices,
                                  stride: CInt(MemoryLayout<TESSreal>.size * vertexSize),
